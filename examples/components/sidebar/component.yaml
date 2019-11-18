@@ -1,0 +1,22 @@
+# relationships:
+#   - event -> relation -> selector -> action
+
+relationships:
+    click:
+        closest: 
+            "#toggle": toggleSidebar
+            # Open or closes the sidebar 
+            # vertically
+            "#item-?": toggleItem 
+            # Open and close an item on click
+            # vertically
+    mousemove:
+        contains:
+            "#counter": incrementCounter
+            # Increments counter when mouse 
+            # enters the sidebar component
+    input:
+        "#promotional-code": validatePromoCode
+        sanitise: inputSantiser
+virtualisation:
+     "#sidebar": Hide offscreen
