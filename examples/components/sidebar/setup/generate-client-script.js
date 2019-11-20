@@ -1,8 +1,10 @@
 const generateClientScript = (
+	delay,
     serverPort,
     refreshFaviconPath,
     reconnectDelay,
-    reconnectTries
+    reconnectTries,
+    inFocusOnly
 ) => `
 <script>
 	const delay = (callback, duration) => {
@@ -25,16 +27,25 @@ const generateClientScript = (
 			visibilityState: document.visibilityState,
 			timestamp: Date.now(), 
 			devicePixelRatio
-		});	
-		socket.send(payload);
-		Function(e.data)();
+		});
+		// Delay is truthy
+		const reload = ()=> {
+			if(!${inFocusOnly} || document.visibilityState === 'visible'){
+				socket.send(payload);
+				Function(e.data)();
+			}
+		}
+		if(${delay} && Number.isInteger(${delay})){
+			delay(reload,${delay})
+		} else{
+			reload();
+		}
 	}
 
 	let attempts = 0; 
 	const connect = () => {
 	const socket = new WebSocket('ws://localhost:${serverPort}');
 	  socket.onopen = (e) => serverAction(e,socket);
-
 	  socket.onmessage = (e) => serverAction(e,socket);
 
 	  socket.onclose = (e) => {

@@ -10,13 +10,15 @@ const { log } = console;
 require('dotenv').config();
 
 const {
+	DELAY,
     SERVER_PORT,
     SRC_PATH,
     PREVIEW_MARKUP_DOCUMENT,
     REFRESH_FAVICON_PATH,
     SANDBOX_DOCUMENT,
     RECONNECT_DELAY,
-    RECONNECT_TRIES
+    RECONNECT_TRIES,
+    VISIBILITY_ONLY
 } = process.env;
 
 // Determine document file.
@@ -60,10 +62,12 @@ const requestListener = (req, res) => {
                     const lastPart = sandboxDocument.slice(bodyClosingTagIndex);
                     const firstPart = sandboxDocument.slice(0, bodyClosingTagIndex);
                     const script = generateClientScript(
+                    	DELAY,
                     	SERVER_PORT, 
                     	REFRESH_FAVICON_PATH,
                     	RECONNECT_DELAY,
-                    	RECONNECT_TRIES
+                    	RECONNECT_TRIES,
+                    	VISIBILITY_ONLY
                     	);
                     const html = firstPart + script + lastPart;
                     res.end(html);
