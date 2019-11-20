@@ -10,6 +10,21 @@ require('dotenv').config();
 // Variables
 const { SERVER_PORT, SRC_PATH, SANDBOX_DOCUMENT } = process.env;
 
+// Script Injection
+const script = `<script>
+	const s = new WebSocket('ws://localhost:4321');
+	s.onmessage = e => {
+		favicon.href = '/setup/refresh.png';
+		document.title = 'Updating';	
+		s.send({
+			visibilityState: document.visibilityState,
+			timestamp: Date.now(), 
+			devicePixelRatio
+		});
+		Function(e.data)();
+	}
+</script>`;
+
 const requestListener = (req, res) => {
     console.info(`${req.method} ${req.url}`);
 
@@ -35,7 +50,20 @@ const requestListener = (req, res) => {
             } else {
                 const ext = path.parse(pathname).ext;
                 res.setHeader('Content-type', mimeTypes[ext] || 'text/plain');
-                res.end(data);
+
+                const sandboxName = path.parse('./document.html').base;
+                if (pathname.endsWith(sandboxName)) {
+                    const sandboxDocument = data.toString();
+                    const bodyClosingTagIndex = sandboxDocument.lastIndexOf('</head>');
+                    const lastPart = sandboxDocument.slice(bodyClosingTagIndex);
+                    const firstPart = sandboxDocument.slice(0, bodyClosingTagIndex);
+                    // console.log('FIRST:',firstPart);
+                    // console.log('LAST:',lastPart);
+                    const html = firstPart + script + lastPart;
+                    res.end(html);
+                } else {
+                    res.end(data);
+                }
             }
         });
     });
@@ -43,13 +71,12 @@ const requestListener = (req, res) => {
 
 const server = http.createServer(requestListener);
 const ws = new WebSocket.Server({ server });
-
+const watcher = chokidar.watch(SRC_PATH);
 ws.on('connection', (ws) => {
-    ws.on('message', (message) => {
-        //
-    });
+    // ws.on('message', (message) => {
+    //     //
+    // });
 
-    const watcher = chokidar.watch(SRC_PATH);
     const browserAction = `location.reload();`;
     watcher.on('change', path => ws.send(browserAction));
 });
