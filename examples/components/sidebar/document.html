@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Component Sandbox</title>
+	<link class="favicon" rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="stylesheet" href="/src/style.css">
+	<script>
+		const favicon = document.head.getElementsByClassName('favicon').item(0);
+	</script>
+</head>
+<body>
+	<!-- Source dependencies here -->
+	<script type="module" src="./index.js"></script>
+
+	<script>
+		const socket = new WebSocket('ws://localhost:4321');
+		socket.onmessage = (e) => {
+			favicon.href = '/recycle-icon-32-202361.png';
+			document.title = 'Updating';	
+			socket.send({
+				visibilityState: document.visibilityState,
+				timestamp: Date.now(), 
+				devicePixelRatio
+			});
+			// Function(e.data)(); // server action.
+			location.reload()
+		}
+	</script>
+</body>
+</html>
