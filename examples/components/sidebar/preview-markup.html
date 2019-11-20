@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Preview Markup</title>
+	<link class="favicon" rel="icon" type="image/png" sizes="32x32" href="/setup/favicon.png">
+	<link rel="stylesheet" href="/src/style.css">
+	<style id="hide-page">
+		body{
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body>
+	<object data="./dist/sidebar.html"></object>
+
+	<script>
+		const object = document.querySelector('object');
+		object.addEventListener('load',()=>{
+			const component = object.contentDocument.body.firstElementChild; 
+			console.log('component',component)
+			document.body.insertAdjacentElement('afterbegin',component);
+			object.remove();
+			document.querySelector('#hide-page').remove();
+		});
+	</script>
+</body>
+</html>
