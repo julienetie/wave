@@ -14,7 +14,9 @@ const {
     SRC_PATH,
     PREVIEW_MARKUP_DOCUMENT,
     REFRESH_FAVICON_PATH,
-    SANDBOX_DOCUMENT
+    SANDBOX_DOCUMENT,
+    RECONNECT_DELAY,
+    RECONNECT_TRIES
 } = process.env;
 
 // Determine document file.
@@ -57,7 +59,12 @@ const requestListener = (req, res) => {
                     // Generate and inject the script.
                     const lastPart = sandboxDocument.slice(bodyClosingTagIndex);
                     const firstPart = sandboxDocument.slice(0, bodyClosingTagIndex);
-                    const script = generateClientScript(SERVER_PORT, REFRESH_FAVICON_PATH);
+                    const script = generateClientScript(
+                    	SERVER_PORT, 
+                    	REFRESH_FAVICON_PATH,
+                    	RECONNECT_DELAY,
+                    	RECONNECT_TRIES
+                    	);
                     const html = firstPart + script + lastPart;
                     res.end(html);
                     return;

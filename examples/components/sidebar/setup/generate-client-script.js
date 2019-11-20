@@ -1,15 +1,36 @@
-const generateClientScript = (serverPort, refreshFaviconPath) => `<script>
+const generateClientScript = (
+    serverPort,
+    refreshFaviconPath,
+    reconnectDelay,
+    reconnectTries
+) => `
+<script>
+	const delay = (callback, duration) => {
+	    let startTime = 0;
+	    let terminate = false;
+	    const raf = requestAnimationFrame;
+	    const loop = (timestamp) => {
+	        startTime = startTime || timestamp;
+	        if (timestamp > startTime + duration && !terminate && callback) 
+	            return callback(),terminate = true;
+	        raf(loop);
+	    }
+	    raf(loop);
+	}
+	
 	const serverAction = (e, socket) => {
-			favicon.href = '${refreshFaviconPath}';
-			document.title = 'Updating';
-			const payload = JSON.stringify({
-				visibilityState: document.visibilityState,
-				timestamp: Date.now(), 
-				devicePixelRatio
-			});	
-			socket.send(payload);
-			Function(e.data)();
-		}
+		favicon.href = '${refreshFaviconPath}';
+		document.title = 'Updating';
+		const payload = JSON.stringify({
+			visibilityState: document.visibilityState,
+			timestamp: Date.now(), 
+			devicePixelRatio
+		});	
+		socket.send(payload);
+		Function(e.data)();
+	}
+
+	let attempts = 0; 
 	const connect = () => {
 	const socket = new WebSocket('ws://localhost:${serverPort}');
 	  socket.onopen = (e) => serverAction(e,socket);
@@ -17,13 +38,18 @@ const generateClientScript = (serverPort, refreshFaviconPath) => `<script>
 	  socket.onmessage = (e) => serverAction(e,socket);
 
 	  socket.onclose = (e) => {
-	    console.info('The server has disconnected. Will attempt to reconnect in 2 seconds', e.reason);
-	    setTimeout(function() {
-	      connect();
-	    }, 2000);
+	    console.info('The server has disconnected. Will attempt to reconnect' + (${reconnectTries} - attempts) + ' times', e.reason);
+	    if(document.visibilityState === 'visible'){
+		    delay(() => {
+		    	if(attempts < ${reconnectTries}){
+		      		connect();
+		  		}
+		  		attempts++;
+		    }, ${reconnectDelay});
+		}
 	  };
 
-	  socket.onerror = function(err) {
+	  socket.onerror = (err) => {
 	    console.error('There was an error with the connection: ', err.message, 'closing socket');
 	    socket.close();
 	  };
@@ -32,4 +58,3 @@ const generateClientScript = (serverPort, refreshFaviconPath) => `<script>
 </script>`;
 
 module.exports = generateClientScript;
-
