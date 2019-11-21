@@ -14,4 +14,4 @@ markupPartial
 
 export {
 	markupPartial
-}
+} 

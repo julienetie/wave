@@ -16,5 +16,5 @@ const sidebar = {
         parent.appendChild(component);
     }
 }
-console.log('AZ')
+
 export default sidebar;

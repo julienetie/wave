@@ -5,36 +5,39 @@
 }
 
 .foo {
-  color: red
+    color: red;
+
+    @nest &>.bar {
+        color: blue;
+    }
 }
 
-.foo > .bar {
-    color: blue
-}
 /* equivalent to
    .foo { color: red; }
    .foo > .bar { color: blue; }
  */
 
 .foo {
-  color: red
+    color: red;
+
+    @nest .parent & {
+        color: blue;
+    }
 }
 
-.parent .foo {
-    color: blue
-}
 /* equivalent to
    .foo { color: red; }
    .parent .foo { color: blue; }
  */
 
 .foo {
-  color: red
+    color: red;
+
+    @nest :not(&) {
+        color: pink;
+    }
 }
 
-:not(.foo) {
-    color: blue
-}
 /* equivalent to
    .foo { color: red; }
    :not(.foo) { color: blue; }

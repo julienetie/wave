@@ -7,11 +7,12 @@ const chokidar = require('chokidar');
 const mimeTypes = require('./mime-types.json');
 const generateClientScript = require('./generate-client-script');
 const { log } = console;
-const {yellow} = require('chalk');
+const { yellow } = require('chalk');
+const nestCSS = require('./nest-css.js')
 require('dotenv').config();
 
 const {
-	DELAY,
+    DELAY,
     PORT,
     SRC_PATH,
     PREVIEW_MARKUP_DOCUMENT,
@@ -63,13 +64,13 @@ const requestListener = (req, res) => {
                     const lastPart = sandboxDocument.slice(bodyClosingTagIndex);
                     const firstPart = sandboxDocument.slice(0, bodyClosingTagIndex);
                     const script = generateClientScript(
-                    	DELAY,
-                    	PORT, 
-                    	REFRESH_FAVICON_PATH,
-                    	RECONNECT_DELAY,
-                    	RECONNECT_TRIES,
-                    	VISIBILITY_ONLY
-                    	);
+                        DELAY,
+                        PORT,
+                        REFRESH_FAVICON_PATH,
+                        RECONNECT_DELAY,
+                        RECONNECT_TRIES,
+                        VISIBILITY_ONLY
+                    );
                     const html = firstPart + script + lastPart;
                     res.end(html);
                     return;
@@ -82,18 +83,28 @@ const requestListener = (req, res) => {
 
 const server = http.createServer(requestListener);
 const ws = new WebSocket.Server({ server });
-
+const watcher = chokidar.watch(SRC_PATH);
 
 // Watch files
 ws.on('connection', (ws) => {
-	const watcher = chokidar.watch(SRC_PATH);
+
     ws.on('message', (message) => {
-    	const data = JSON.parse(message)
-    	console.log('message', data);
+        const data = JSON.parse(message)
     });
 
     const browserAction = `location.reload();`;
-    watcher.on('change', path => ws.send(browserAction));
+    watcher.on('change', (pathName) => {
+
+        const fileName = path.basename(pathName)
+        if (fileName.endsWith('.css')) {
+            nestCSS(() => {
+            	console.log('REFFFFFFFFFFFFFFF')
+                ws.send(browserAction)
+            });
+            return;
+        }
+        ws.send(browserAction)
+    });
 });
 
 server.listen(PORT);
