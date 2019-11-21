@@ -1,7 +1,7 @@
-import {o} from './node_modules/soucouyant/dist/soucouyant.js';
+import { o } from './node_modules/soucouyant/dist/soucouyant.js';
 import sidebar from './src/index.js';
 
-console.info('o',o)
+console.info('o', o)
 
 const summary = `Lorem Ipsum is simply dummy text of the printing 
 			  and typesetting industry. Lorem Ipsum has been the industry's 
@@ -17,11 +17,11 @@ const summary = `Lorem Ipsum is simply dummy text of the printing
 
 
 sidebar.connect({
-	id: 123,
-	parent: document.body,
-	className: 'sidebar',
-	data: {
-		heading: 'What is Lorem Ipsum?',
-		summary
-	}
+    id: 123,
+    parent: document.body,
+    className: 'sidebar',
+    data: {
+        heading: 'What is Lorem Ipsum?',
+        summary
+    }
 })

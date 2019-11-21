@@ -7,11 +7,12 @@ const chokidar = require('chokidar');
 const mimeTypes = require('./mime-types.json');
 const generateClientScript = require('./generate-client-script');
 const { log } = console;
+const {yellow} = require('chalk');
 require('dotenv').config();
 
 const {
 	DELAY,
-    SERVER_PORT,
+    PORT,
     SRC_PATH,
     PREVIEW_MARKUP_DOCUMENT,
     REFRESH_FAVICON_PATH,
@@ -63,7 +64,7 @@ const requestListener = (req, res) => {
                     const firstPart = sandboxDocument.slice(0, bodyClosingTagIndex);
                     const script = generateClientScript(
                     	DELAY,
-                    	SERVER_PORT, 
+                    	PORT, 
                     	REFRESH_FAVICON_PATH,
                     	RECONNECT_DELAY,
                     	RECONNECT_TRIES,
@@ -95,6 +96,6 @@ ws.on('connection', (ws) => {
     watcher.on('change', path => ws.send(browserAction));
 });
 
-server.listen(SERVER_PORT);
+server.listen(PORT);
 
-console.info(`Watching ${SRC_PATH} on port ${SERVER_PORT} to live-reload ${documentFile}`);
+console.info(`Watching ${yellow(SRC_PATH)} on port ${yellow(PORT)} to live-reload ${yellow(documentFile)}`);
