@@ -21,7 +21,8 @@
   "scripts": {
     "start": "node setup/server.js",
     "markup": "yarn start --preview-markup",
-    "make": "cp ./document.html ./dist/$npm_package_name .html",
+    "distribute": "yarn start --distribute",
+    "clean": "rm -rf ./dist",
     "test": "",
     "validate": ""
   }

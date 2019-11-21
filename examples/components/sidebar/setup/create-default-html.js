@@ -1,10 +1,12 @@
 const puppeteer = require('../node_modules/puppeteer/index.js');
 const fs = require('fs');
 require('dotenv').config();
-
 const { PORT } = process.env;
 console.log('PPPORT', PORT)
-const ssr = async (url) => {
+
+
+
+const createDefaultHTML = async (url) => {
     const start = Date.now();
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
@@ -23,10 +25,5 @@ const ssr = async (url) => {
     return { html, ttRenderMs };
 }
 
-ssr(`http://localhost:${PORT}`)
-    .then(({ html }) => {
-        fs.writeFile('dist/sidebar.html', html, (err) => {
-            if (err) throw err;
-            console.log('Saved!');
-        });
-    });
+
+module.exports = createDefaultHTML; 

@@ -16,5 +16,4 @@ const sidebar = {
         parent.appendChild(component);
     }
 }
-
 export default sidebar;

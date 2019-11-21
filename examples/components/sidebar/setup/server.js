@@ -5,12 +5,18 @@ const path = require('path');
 const WebSocket = require('ws');
 const chokidar = require('chokidar');
 const mimeTypes = require('./mime-types.json');
+const createDefaultHTML = require('./create-default-html');
+const copySRCFiles = require('./copy-src-files');
 const generateClientScript = require('./generate-client-script');
 const { log } = console;
 const { yellow } = require('chalk');
 const nestCSS = require('./nest-css.js')
 require('dotenv').config();
-
+const { argv } = process;
+const flag = argv[argv.length - 1];
+let documentFile;
+let distributeComponent = false;
+const distPath = './dist';
 const {
     DELAY,
     PORT,
@@ -23,10 +29,15 @@ const {
     VISIBILITY_ONLY
 } = process.env;
 
-// Determine document file.
-const documentFile = process.argv.includes('--preview-markup') ?
-    PREVIEW_MARKUP_DOCUMENT :
-    SANDBOX_DOCUMENT;
+switch (flag) {
+    case '--preview-markup':
+        documentFile = PREVIEW_MARKUP_DOCUMENT;
+        break;
+    case '--distribute':
+        distributeComponent = true;
+    default:
+        documentFile = SANDBOX_DOCUMENT;
+}
 
 const requestListener = (req, res) => {
     let pathname = path.join(__dirname, '../', req.url);
@@ -82,31 +93,48 @@ const requestListener = (req, res) => {
 }
 
 const server = http.createServer(requestListener);
-const ws = new WebSocket.Server({ server });
-const watcher = chokidar.watch(SRC_PATH);
 
-// Watch files
-ws.on('connection', (ws) => {
-
-    ws.on('message', (message) => {
-        const data = JSON.parse(message)
-    });
-
-    const browserAction = `location.reload();`;
-    watcher.on('change', (pathName) => {
-
-        const fileName = path.basename(pathName)
-        if (fileName.endsWith('.css')) {
-            nestCSS(() => {
-            	console.log('REFFFFFFFFFFFFFFF')
-                ws.send(browserAction)
+// Create distribution files.
+if (distributeComponent) {
+    createDefaultHTML(`http://localhost:${PORT}`)
+        .then(({ html }) => {
+            if (!fs.existsSync(distPath)){
+                    fs.mkdirSync(distPath);
+                }
+            fs.writeFile(`${distPath}/sidebar.html`, html, (err) => {
+                if (err) throw err;
+                console.log('Created default HTML');
+                server.close();
             });
-            return;
-        }
-        ws.send(browserAction)
+        })
+        .then(copySRCFiles);
+} else {
+    // Watch source files.
+    const ws = new WebSocket.Server({ server });
+    const watcher = chokidar.watch(SRC_PATH);
+
+    ws.on('connection', (ws) => {
+        ws.on('message', (message) => {
+            const data = JSON.parse(message)
+        });
+
+        const browserAction = `location.reload();`;
+        watcher.on('change', (pathName) => {
+
+            const fileName = path.basename(pathName)
+            if (fileName.endsWith('.css')) {
+                nestCSS(() => {
+                    console.log('REFFFFFFFFFFFFFFF')
+                    ws.send(browserAction)
+                });
+                return;
+            }
+            ws.send(browserAction)
+        });
     });
-});
+}
 
 server.listen(PORT);
+
 
 console.info(`Watching ${yellow(SRC_PATH)} on port ${yellow(PORT)} to live-reload ${yellow(documentFile)}`);
