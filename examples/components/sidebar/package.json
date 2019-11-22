@@ -22,7 +22,7 @@
   "scripts": {
     "start": "node setup/server.js",
     "markup": "yarn start --preview-markup",
-    "distribute": "yarn start --distribute",
+    "distribute": "yarn clean && yarn start --distribute",
     "clean": "rm -rf ./dist",
     "validate": ""
   }
