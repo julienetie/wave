@@ -2,10 +2,9 @@ const fs = require('fs');
 const postcss = require('postcss');
 const postcssNesting = require('postcss-nesting');
 const exec = require('child_process').exec;
-console.log('test')
 
 const writeCSS = (callback) => fs.readFile("./src/style.css", (err, CSS) => {
-    const results = postcss([
+    postcss([
             postcssNesting()
         ]).process(CSS, { from: "./src/style.css", to: "./temp/style.css" })
         .then((result) => {

@@ -2,9 +2,6 @@ const puppeteer = require('../node_modules/puppeteer/index.js');
 const fs = require('fs');
 require('dotenv').config();
 const { PORT } = process.env;
-console.log('PPPORT', PORT)
-
-
 
 const createDefaultHTML = async (url) => {
     const start = Date.now();

@@ -1,11 +1,9 @@
 {
   "name": "sidebar-thing",
   "version": "0.1.0",
-  "description": "Webware sidebar example",
-  "main": "index.js",
-  "author": "Julien Etienne",
+  "description": "Wave Component: Sidebar example",
   "license": "UNLICENSED",
-  "private": false,
+  "private": true,
   "dependencies": {
     "soucouyant": "^0.1.3"
   },
@@ -18,12 +16,14 @@
     "puppeteer": "^2.0.0",
     "ws": "^7.2.0"
   },
+  "engines": {
+    "node": ">=13"
+  },
   "scripts": {
     "start": "node setup/server.js",
     "markup": "yarn start --preview-markup",
     "distribute": "yarn start --distribute",
     "clean": "rm -rf ./dist",
-    "test": "",
     "validate": ""
   }
 }

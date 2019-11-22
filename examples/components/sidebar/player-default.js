@@ -1,8 +1,6 @@
 import { o } from './node_modules/soucouyant/dist/soucouyant.js';
 import sidebar from './src/index.js';
 
-console.info('o', o)
-
 const summary = `Lorem Ipsum is simply dummy text of the printing 
 			  and typesetting industry. Lorem Ipsum has been the industry's 
 			  standard dummy text ever since the 1500s, when an unknown 
