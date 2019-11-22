@@ -68,4 +68,4 @@ const generateClientScript = (
 	connect();
 </script>`;
 
-module.exports = generateClientScript;
+export default generateClientScript;

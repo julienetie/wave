@@ -1,14 +1,14 @@
-const { exec } = require('child_process');
-const fs = require('fs');
-const { name } = require('../package.json');
+import { exec } from 'child_process';
+import packageJSON from '../package.json';
+const { name } = packageJSON;
 
-const copyFiles = () =>{
-	exec(`mkdir -p dist && cp -R src/* dist`, (e, stdout, stderr) => {
-	    if (e instanceof Error) {
-	        console.error(e);
-	        throw e;
-	    }
-	});
+const copyFiles = () => {
+  exec(`mkdir -p dist && cp -R src/* dist`, (e, stdout, stderr) => {
+    if (e instanceof Error) {
+      console.error(e);
+      throw e;
+    }
+  });
 }
 
-module.exports = copyFiles;
+export default copyFiles;
