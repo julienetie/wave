@@ -1,0 +1,11 @@
+DAEMONS
+‾‾‾‾‾‾‾
+The ./daemons directory contains modules that operate in the background in excess of typical UI behaviors such as:
+
+- Operations during idle time
+- Time monitoring
+- Non-user driven XHR requests
+
+A daemon is not directly user-driven but may be an indirect result of a user's action.
+
+If there is too much ambiguity around clarifying a service as a daemon, it's probably not a daemon.

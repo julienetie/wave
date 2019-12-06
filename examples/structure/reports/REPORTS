@@ -1,0 +1,9 @@
+REPORTS
+‾‾‾‾‾‾‾
+The ./reports directory is for generated reports (automated).
+E.g. unit-test coverage. Mandotory reports are: 
+
+- _layers.yaml            # A list of all selectors with z-index values
+- _public.yaml            # The public structure
+- _src.yaml               # The source structure
+- _stats.txt              # Development and public statistics

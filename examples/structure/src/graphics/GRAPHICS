@@ -1,0 +1,23 @@
+GRAPHICS
+‾‾‾‾‾‾‾‾
+The ./graphics directory features graphical aspects of the user interface that exceed the capabilities of HTML with CSS, such as: 
+
+- SVG               # All types of SVG markup can be placed in the ./graphics/svg directory. 
+                    # SVG can alternatively be placed in component or player directories 
+                    # depending the severity of SVG usage.
+
+- Images            # All types of images can be placed in the ./graphics/images directory.
+                    # Images should not be placed within components or players as there is no
+                    # semantic or manipulative advantages in contrast with SVG markup.
+                    # SVG images can be used in either ./graphics/svg or ./graphics/images 
+                    # directories.
+                    # All types of image code can reside in images including base64 snippets
+
+- Fonts             # Fonts should be either:
+                    # - woff2
+                    # - CSS base64 woff2
+
+
+The ./graphics directory should not include assets that are considered as content. 
+All assets within ./graphics should only be part of the user interface not articles 
+or posts.

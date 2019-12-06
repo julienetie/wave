@@ -1,0 +1,14 @@
+PUBLISHED
+‾‾‾‾‾‾‾‾‾
+The ./published direcotry contains assets and content for published or frequently changing content.
+This excludes imagery for standard user interfaces which resides in the ./graphics directory.
+
+E.g. 
+
+    - A news article's text content can be found within ./published/images/_text.json.js
+    - A news article's image could be found within ./published/images 
+    - A news article's video could be found within ./published/video
+    - The content of an about page
+
+The published folder does not need to be in use. Typically published content and assets are managed 
+by content management systems. This folder resides for parts of projects where content is requried but may be lacking the advantage of a content management system.

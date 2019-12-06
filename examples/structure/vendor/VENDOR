@@ -1,0 +1,6 @@
+VENDOR
+‾‾‾‾‾‾
+./vendor is a directory for third party libraries outside of the node_modules eco-system. It is also used to store customized third-party libraries that do not belong to a repository. 
+
+Please check the license of each library before use.
+
